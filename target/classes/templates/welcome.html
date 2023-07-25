@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta name="description" content=""/>
+  <meta name="author" content=""/>
+  <title>RealEstateBazaar</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <style type="text/css">
+    html,body,h1,h2,h3,h4 {font-family:"Lato", sans-serif}
+    .mySlides {display:none}
+    .w3-tag, .fa {cursor:pointer}
+    .w3-tag {height:15px;width:15px;padding:0;margin-top:6px}
+  </style>
+</head>
+<body>
+
+<!-- Links (sit on top) -->
+<div class="w3-top">
+  <div class="w3-row w3-large w3-light-grey">
+    <div class="w3-col s3">
+      <a href="/welcome" class="w3-button w3-block">Home</a>
+    </div>
+    <div class="w3-col s3">
+      <p></p>
+    </div>
+    <div class="w3-col s3">
+      <p></p>
+    </div>
+    <div class="w3-col s3">
+      <a href="/logout" class="w3-button w3-block">Logout</a>
+    </div>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
+  <div class="w3-panel">
+    <h1 style="text-align: center; color: #027bff"><b>Real Estate Bazaar</b></h1>
+    <div th:if="${AppUser != null}">
+      <h6><i class="fa fa-home"></i>
+        WELCOME, <span th:text="${AppUser.getUsername().toUpperCase()}" style="color: #027bff"/><br>
+        ROLE: <span th:text="${role}" style="color: #027bff"/>
+      </h6>
+    </div>
+
+  </div>
+</div>
+
+<!-- Search estate (All roles)-->
+<div class="container">
+  <form method="get" action="/welcome/estate">
+    <h4 class="form-signin-heading">Search Estate</h4>
+    <table>
+      <tr>
+        <th><label for="realEstateAddress">Address</label></th>
+        <th><label for="realEstateType">Type</label></th>
+      </tr>
+      <tr>
+        <td><select id="realEstateAddress" name="realEstateAddress" class="form-control">
+          <option th:each="address : ${T(com.hu.vbm672.estate.RealEstateAddress).values()}"
+                  th:value="${address}"
+                  th:text="${address}"></option>
+        </select></td>
+        <td><select id="realEstateType" name="realEstateType" class="form-control">
+          <option th:each="type : ${T(com.hu.vbm672.estate.RealEstateType).values()}"
+                  th:value="${type}"
+                  th:text="${type}"></option>
+        </select></td>
+      </tr>
+    </table>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" style="width: 120px;">Search</button>
+  </form>
+</div>
+
+<!-- Search Results (All roles)-->
+<div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
+  <!-- Search results table -->
+  <div th:if="${SearchList != null}">
+    <h4>Search Results:</h4>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Floor</th>
+        <th>Room</th>
+        <th>Facade</th>
+        <th>Area</th>
+        <th>Address</th>
+        <th>Type</th>
+        <th>Price</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="realEstate : ${SearchList}">
+        <td th:text="${realEstate.id}"></td>
+        <td th:text="${realEstate.floor}"></td>
+        <td th:text="${realEstate.room}"></td>
+        <td th:text="${realEstate.facade}"></td>
+        <td th:text="${realEstate.area}"></td>
+        <td th:text="${realEstate.realEstateAddress}"></td>
+        <td th:text="${realEstate.realEstateType}"></td>
+        <td th:text="${realEstate.price}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add role request (User only) -->
+<div class="container" th:if="${role.equals('USER')}">
+  <form method="post" action="/welcome/role/add">
+    <h4 class="form-signin-heading">Role Request</h4>
+    <table>
+      <tr>
+        <th><label for="appUserRole">Role</label></th>
+      </tr>
+      <tr>
+        <td><select id="appUserRole" name="appUserRole" class="form-control">
+          <option th:each="role : ${T(com.hu.vbm672.appuser.AppUserRole).values()}"
+                  th:unless="${role.name() == 'ADMIN' || role.name() == 'USER'}"
+                  th:value="${role}"
+                  th:text="${role}"></option>
+        </select></td>
+      </tr>
+    </table>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" style="width: 120px;">Request</button>
+  </form>
+</div>
+
+<!-- add estate (All roles except user)-->
+<div class="container" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN') or role.equals('AUTHORIZED_USER')}">
+  <form method="post" action="/welcome/estate/post" onsubmit="return validateAdd()"><br>
+    <h4 class="form-signin-heading">Add Estate</h4>
+    <table>
+      <tr>
+        <th><label for="floor" >Floor</label></th>
+        <th><label for="room" >Room</label></th>
+        <th><label for="facade" >Facade</label></th>
+        <th><label for="area" >Area (m^2)</label></th>
+        <th><label for="realEstateAddress2">Address</label></th>
+        <th><label for="realEstateType2">Type</label></th>
+        <th><label for="price" >Price (TRY)</label></th>
+      </tr>
+      <tr>
+        <td><input type="text" id="floor" name="floor" class="form-control"/></td>
+        <td><input type="text" id="room" name="room" class="form-control"/></td>
+        <td><input type="text" id="facade" name="facade" class="form-control"/></td>
+        <td><input type="text" id="area" name="area" class="form-control"/></td>
+        <td><select id="realEstateAddress2" name="realEstateAddress" class="form-control">
+          <option th:each="address : ${T(com.hu.vbm672.estate.RealEstateAddress).values()}"
+                  th:value="${address}"
+                  th:text="${address}">
+          </option>
+        </select></td>
+        <td><select id="realEstateType2" name="realEstateType" class="form-control">
+          <option th:each="type : ${T(com.hu.vbm672.estate.RealEstateType).values()}"
+                  th:value="${type}"
+                  th:text="${type}">
+          </option>
+        </select></td>
+        <td><input type="text" id="price" name="price" class="form-control"/></td>
+      </tr>
+    </table>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" style="width: 120px;">Add</button>
+  </form>
+  <script>
+    function validateAdd() {
+      var floor = document.getElementById("floor").value;
+      var room = document.getElementById("room").value;
+      var facade = document.getElementById("facade").value;
+      var area = document.getElementById("area").value;
+      var address = document.getElementById("realEstateAddress").value;
+      var type = document.getElementById("realEstateType").value;
+      var price = document.getElementById("price").value;
+
+      if (floor.trim() === "" || room.trim() === "" || facade.trim() === "" || area.trim() === "" || price.trim() === "") {
+        alert("Please fill in all the required fields.");
+        return false;
+      }
+      if (isNaN(price)) {
+        alert("Price must be a number.");
+        return false;
+      }
+      if (isNaN(area)) {
+        alert("Area must be a number.");
+        return false;
+      }
+      return true;
+    }
+  </script>
+</div>
+
+<!-- delete estate (Local Admin & Admin)-->
+<div class="container" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN')}">
+  <form method="post" action="/welcome/estate/delete" onsubmit="return validateDelete()"><br>
+    <h4 class="form-signin-heading">Delete Estate</h4>
+    <table>
+      <tr>
+        <th><label for="id" >ID</label></th>
+      </tr>
+      <tr>
+        <td><input type="text" id="id" name="id" class="form-control"/></td>
+      </tr>
+    </table>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" style="width: 120px;">Delete</button>
+  </form>
+  <script>
+    function validateDelete() {
+      var id = document.getElementById("id").value;
+
+      if (id.trim() === "") {
+        alert("Please fill the required field.");
+        return false;
+      }
+
+      if (isNaN(id)) {
+        alert("ID must be a number.");
+        return false;
+      }
+
+      return true;
+    }
+  </script>
+  <br>
+</div>
+
+<!-- Search Role Request (Local Admin & Admin)-->
+<div class="container" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN')}">
+  <form method="get" action="/welcome/role">
+    <h4 class="form-signin-heading">Search Role Request</h4>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" style="width: 120px;">Search</button>
+  </form>
+</div>
+
+<!-- Search Results (Local Admin & Admin) -->
+<div class="w3-content" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN')}" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
+  <!-- Search results table -->
+  <div th:if="${RoleList != null}">
+    <h4>Search Results:</h4>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Requested Role</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="roleRequest : ${RoleList}">
+        <td th:text="${roleRequest.getId()}"></td>
+        <td th:text="${roleRequest.getEmail()}"></td>
+        <td th:text="${roleRequest.getAppUserRole()}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- change Role (Local Admin (only for authorized user) & Admin)-->
+<div class="container" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN')}">
+  <form method="post" action="/welcome/role/approve" onsubmit="return validateRequest()"><br>
+    <h4 class="form-signin-heading">Approve Role</h4>
+    <table>
+      <tr>
+        <th><label for="requestId" >ID</label></th>
+      </tr>
+      <tr>
+        <td><input type="text" id="requestId" name="requestId" class="form-control"/></td>
+      </tr>
+    </table>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" style="width: 120px;">Approve</button>
+  </form>
+  <script>
+    function validateRequest() {
+      var requestId = document.getElementById("requestId").value;
+
+      if (requestId.trim() === "") {
+        alert("Please fill the required field.");
+        return false;
+      }
+      if (isNaN(requestId)) {
+        alert("ID must be a number.");
+        return false;
+      }
+      return true;
+    }
+  </script>
+  <br>
+</div>
+
+</body>
+</html>
