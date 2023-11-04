@@ -10,20 +10,11 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet"/>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
-  <style type="text/css">
-    html,body,h1,h2,h3,h4 {font-family:"Lato", sans-serif}
-    .mySlides {display:none}
-    .w3-tag, .fa {cursor:pointer}
-    .w3-tag {height:15px;width:15px;padding:0;margin-top:6px}
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- Links (sit on top) -->
-<div class="w3-top">
+<div class="w3-top"> <!-- Links (sit on top) -->
   <div class="w3-row w3-large w3-light-grey">
     <div class="w3-col s3">
       <a href="/welcome" class="w3-button w3-block">Home</a>
@@ -40,8 +31,7 @@
   </div>
 </div>
 
-<!-- Content -->
-<div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
+<div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px"> <!-- Content -->
   <div class="w3-panel">
     <h1 style="text-align: center; color: #027bff"><b>Real Estate Bazaar</b></h1>
     <div th:if="${AppUser != null}">
@@ -54,8 +44,7 @@
   </div>
 </div>
 
-<!-- Search estate (All roles)-->
-<div class="container">
+<div class="container"> <!-- Search estate (All roles)-->
   <form method="get" action="/welcome/estate">
     <h4 class="form-signin-heading">Search Estate</h4>
     <table>
@@ -80,10 +69,9 @@
   </form>
 </div>
 
-<!-- Search Results (All roles)-->
-<div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
-  <!-- Search results table -->
-  <div th:if="${SearchList != null}">
+
+<div class="w3-content" style="max-width:1100px;margin-top:80px;margin-bottom:80px"> <!-- Search Results (All roles)-->
+  <div th:if="${SearchList != null}">   <!-- Search results table -->
     <h4>Search Results:</h4>
     <table class="table table-striped">
       <thead>
@@ -114,8 +102,7 @@
   </div>
 </div>
 
-<!-- Add role request (User only) -->
-<div class="container" th:if="${role.equals('USER')}">
+<div class="container" th:if="${role.equals('USER')}"> <!-- Add role request (User only) -->
   <form method="post" action="/welcome/role/add">
     <h4 class="form-signin-heading">Role Request</h4>
     <table>
@@ -135,8 +122,7 @@
   </form>
 </div>
 
-<!-- add estate (All roles except user)-->
-<div class="container" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN') or role.equals('AUTHORIZED_USER')}">
+<div class="container" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN') or role.equals('AUTHORIZED_USER')}"> <!-- add estate (All roles except user)-->
   <form method="post" action="/welcome/estate/post" onsubmit="return validateAdd()"><br>
     <h4 class="form-signin-heading">Add Estate</h4>
     <table>
@@ -198,8 +184,7 @@
   </script>
 </div>
 
-<!-- delete estate (Local Admin & Admin)-->
-<div class="container" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN')}">
+<div class="container" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN')}"> <!-- delete estate (Local Admin & Admin)-->
   <form method="post" action="/welcome/estate/delete" onsubmit="return validateDelete()"><br>
     <h4 class="form-signin-heading">Delete Estate</h4>
     <table>
@@ -232,18 +217,15 @@
   <br>
 </div>
 
-<!-- Search Role Request (Local Admin & Admin)-->
-<div class="container" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN')}">
+<div class="container" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN')}"> <!-- Search Role Request (Local Admin & Admin)-->
   <form method="get" action="/welcome/role">
     <h4 class="form-signin-heading">Search Role Request</h4>
     <button class="btn btn-lg btn-primary btn-block" type="submit" style="width: 120px;">Search</button>
   </form>
 </div>
 
-<!-- Search Results (Local Admin & Admin) -->
-<div class="w3-content" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN')}" style="max-width:1100px;margin-top:80px;margin-bottom:80px">
-  <!-- Search results table -->
-  <div th:if="${RoleList != null}">
+<div class="w3-content" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN')}" style="max-width:1100px;margin-top:80px;margin-bottom:80px"> <!-- Search Results (Local Admin & Admin) -->
+  <div th:if="${RoleList != null}"> <!-- Search results table -->
     <h4>Search Results:</h4>
     <table class="table table-striped">
       <thead>
@@ -264,8 +246,7 @@
   </div>
 </div>
 
-<!-- change Role (Local Admin (only for authorized user) & Admin)-->
-<div class="container" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN')}">
+<div class="container" th:if="${role.equals('LOCAL_ADMIN') or role.equals('ADMIN')}"> <!-- change Role (Local Admin (only for authorized user) & Admin)-->
   <form method="post" action="/welcome/role/approve" onsubmit="return validateRequest()"><br>
     <h4 class="form-signin-heading">Approve Role</h4>
     <table>
